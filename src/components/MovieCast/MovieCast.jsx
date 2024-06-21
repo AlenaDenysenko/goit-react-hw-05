@@ -27,7 +27,7 @@ const MovieCast = ({ movieId }) => {
 
   return (
     <div>
-      <h3>Акторський склад</h3>
+      <h2>Акторський склад</h2>
       <ul>
         {cast.map((actor) => (
           <li key={actor.id}>{actor.name}</li>

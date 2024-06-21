@@ -18,7 +18,7 @@ const MovieReviews = ({ movieId }) => {
         );
         setReviews(response.data.results);
       } catch (error) {
-        console.error('Помилка при отриманні оглядів:', error);
+        console.error('Помилка при отриманні рецензій:', error);
       }
     };
 
@@ -27,19 +27,12 @@ const MovieReviews = ({ movieId }) => {
 
   return (
     <div>
-      <h3>Рецензії</h3>
-      {reviews.length > 0 ? (
-        <ul>
-          {reviews.map((review) => (
-            <li key={review.id}>
-              <h4>{review.author}</h4>
-              <p>{review.content}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Немає доступних оглядів для цього фільму.</p>
-      )}
+      <h2>Рецензії</h2>
+      <ul>
+        {reviews.map((review) => (
+          <li key={review.id}>{review.content}</li>
+        ))}
+      </ul>
     </div>
   );
 };
@@ -49,3 +42,5 @@ MovieReviews.propTypes = {
 };
 
 export default MovieReviews;
+
+

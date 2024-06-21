@@ -1,5 +1,5 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
-import { useParams, Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom'; // змінено useHistory на useNavigate
+import { useParams, Route, Routes, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './MovieDetailsPage.module.css';
 
@@ -8,8 +8,7 @@ const MovieReviews = lazy(() => import('../../components/MovieReviews/MovieRevie
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
-  const location = useLocation();
-  const navigate = useNavigate(); // змінено history на navigate
+  const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
@@ -33,7 +32,7 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   const handleGoBack = () => {
-    navigate(-1); // змінено history.goBack на navigate(-1)
+    navigate(-1);
   };
 
   if (!movie) return <div>Loading...</div>;
@@ -58,20 +57,20 @@ const MovieDetailsPage = () => {
         <h3>Додаткова інформація</h3>
         <ul>
           <li>
-            <Link to={`${location.pathname}/cast`} className={styles.link}>
+            <Link to={`/movies/${movieId}/cast`} className={styles.link}>
               Акторський склад
             </Link>
           </li>
           <li>
-            <Link to={`${location.pathname}/reviews`} className={styles.link}>
+            <Link to={`/movies/${movieId}/reviews`} className={styles.link}>
               Рецензії
             </Link>
           </li>
         </ul>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path="cast" element={<MovieCast />} />
-            <Route path="reviews" element={<MovieReviews />} />
+            <Route path="cast" element={<MovieCast movieId={movieId} />} />
+            <Route path="reviews" element={<MovieReviews movieId={movieId} />} />
           </Routes>
         </Suspense>
       </div>

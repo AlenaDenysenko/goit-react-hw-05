@@ -38,12 +38,13 @@ const App = () => {
             path="/movies"
             element={<MoviesPage fetchMovies={fetchMovies} />}
           />
-          <Route path="/movies/:movieId" element={<MovieDetailsPage />} />
+          <Route path="/movies/:movieId/*" element={<MovieDetailsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </Router>
   );
+
 };
 
 export default App;
