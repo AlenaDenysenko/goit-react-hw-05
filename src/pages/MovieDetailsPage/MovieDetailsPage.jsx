@@ -1,5 +1,5 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
-import { useParams, Route, Routes, Link, useLocation, useHistory } from 'react-router-dom';
+import { useEffect, useState, lazy, Suspense, useLocation, useHistory } from 'react'; // Додайте useLocation та useHistory
+import { useParams, Route, Routes, Link } from 'react-router-dom';
 import axios from 'axios';
 import styles from './MovieDetailsPage.module.css';
 
@@ -8,8 +8,8 @@ const MovieReviews = lazy(() => import('../../components/MovieReviews/MovieRevie
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
-  const { pathname } = useLocation();
-  const history = useHistory();
+  const { pathname } = useLocation(); // Використовуйте useLocation для отримання поточного шляху
+  const history = useHistory(); // Використовуйте useHistory для навігації назад
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
@@ -32,17 +32,12 @@ const MovieDetailsPage = () => {
     fetchMovieDetails();
   }, [movieId]);
 
-  const handleGoBack = () => {
-    history.goBack();
-  };
+  
 
   if (!movie) return <div>Loading...</div>;
 
   return (
     <div className={styles.container}>
-      <button onClick={handleGoBack} className={styles.goBackButton}>
-        Назад
-      </button>
       <div className={styles.movieDetails}>
         <img
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
