@@ -5,10 +5,10 @@ const Navigation = () => {
     <nav>
       <ul>
         <li>
-          <NavLink exact to="/" activeClassName="active">Home</NavLink>
+          <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink>
         </li>
         <li>
-          <NavLink to="/movies" activeClassName="active">Movies</NavLink>
+          <NavLink to="/movies" className={({ isActive }) => isActive ? "active" : ""}>Movies</NavLink>
         </li>
       </ul>
     </nav>
@@ -16,6 +16,7 @@ const Navigation = () => {
 };
 
 export default Navigation;
+
 
 
 

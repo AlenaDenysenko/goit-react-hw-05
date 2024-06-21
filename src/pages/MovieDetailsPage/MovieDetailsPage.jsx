@@ -1,5 +1,5 @@
-import { useEffect, useState, lazy, Suspense, useLocation, useHistory } from 'react'; // Додайте useLocation та useHistory
-import { useParams, Route, Routes, Link } from 'react-router-dom';
+import { useEffect, useState, lazy, Suspense } from 'react';
+import { useParams, Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom'; // змінено useHistory на useNavigate
 import axios from 'axios';
 import styles from './MovieDetailsPage.module.css';
 
@@ -8,8 +8,8 @@ const MovieReviews = lazy(() => import('../../components/MovieReviews/MovieRevie
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
-  const { pathname } = useLocation(); // Використовуйте useLocation для отримання поточного шляху
-  const history = useHistory(); // Використовуйте useHistory для навігації назад
+  const location = useLocation();
+  const navigate = useNavigate(); // змінено history на navigate
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
@@ -32,12 +32,17 @@ const MovieDetailsPage = () => {
     fetchMovieDetails();
   }, [movieId]);
 
-  
+  const handleGoBack = () => {
+    navigate(-1); // змінено history.goBack на navigate(-1)
+  };
 
   if (!movie) return <div>Loading...</div>;
 
   return (
     <div className={styles.container}>
+      <button onClick={handleGoBack} className={styles.goBackButton}>
+        Назад
+      </button>
       <div className={styles.movieDetails}>
         <img
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
@@ -53,20 +58,20 @@ const MovieDetailsPage = () => {
         <h3>Додаткова інформація</h3>
         <ul>
           <li>
-            <Link to={`${pathname}/cast`} className={styles.link}>
+            <Link to={`${location.pathname}/cast`} className={styles.link}>
               Акторський склад
             </Link>
           </li>
           <li>
-            <Link to={`${pathname}/reviews`} className={styles.link}>
+            <Link to={`${location.pathname}/reviews`} className={styles.link}>
               Рецензії
             </Link>
           </li>
         </ul>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path={`${pathname}/cast`} element={<MovieCast />} />
-            <Route path={`${pathname}/reviews`} element={<MovieReviews />} />
+            <Route path="cast" element={<MovieCast />} />
+            <Route path="reviews" element={<MovieReviews />} />
           </Routes>
         </Suspense>
       </div>
@@ -75,3 +80,4 @@ const MovieDetailsPage = () => {
 };
 
 export default MovieDetailsPage;
+
