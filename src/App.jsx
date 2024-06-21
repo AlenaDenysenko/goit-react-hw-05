@@ -8,24 +8,23 @@ const MoviesPage = React.lazy(() => import('./pages/MoviesPage/MoviesPage'));
 const MovieDetailsPage = React.lazy(() => import('./pages/MovieDetailsPage/MovieDetailsPage'));
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage/NotFoundPage'));
 
+const apiKey = '7c77f1b4db998debe8d81a873f5fe532';
+
+const fetchMovies = async (url) => {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Помилка при отриманні даних:', error);
+    throw error;
+  }
+};
+
 const App = () => {
-  const apiKey = '7c77f1b4db998debe8d81a873f5fe532';
-
-
-  const fetchMovies = async (url) => {
-    try {
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Помилка при отриманні даних:', error);
-      throw error;
-    }
-  };
-
   return (
     <Router>
       <Navigation />

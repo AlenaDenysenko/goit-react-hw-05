@@ -8,7 +8,7 @@ const MovieReviews = lazy(() => import('../../components/MovieReviews/MovieRevie
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
-  const { url, path } = useLocation();
+  const { pathname } = useLocation();
   const history = useHistory();
   const [movie, setMovie] = useState(null);
 
@@ -58,20 +58,20 @@ const MovieDetailsPage = () => {
         <h3>Додаткова інформація</h3>
         <ul>
           <li>
-            <Link to={`${url}/cast`} className={styles.link}>
+            <Link to={`${pathname}/cast`} className={styles.link}>
               Акторський склад
             </Link>
           </li>
           <li>
-            <Link to={`${url}/reviews`} className={styles.link}>
+            <Link to={`${pathname}/reviews`} className={styles.link}>
               Рецензії
             </Link>
           </li>
         </ul>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path={`${path}/cast`} element={<MovieCast />} />
-            <Route path={`${path}/reviews`} element={<MovieReviews />} />
+            <Route path={`${pathname}/cast`} element={<MovieCast />} />
+            <Route path={`${pathname}/reviews`} element={<MovieReviews />} />
           </Routes>
         </Suspense>
       </div>
@@ -80,5 +80,3 @@ const MovieDetailsPage = () => {
 };
 
 export default MovieDetailsPage;
-
-

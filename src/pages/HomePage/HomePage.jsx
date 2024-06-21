@@ -12,7 +12,7 @@ const HomePage = () => {
           'https://api.themoviedb.org/3/trending/movie/day',
           {
             headers: {
-              Authorization: 'rer 7c77f1b4db998debe8d81a873f5fe532',
+              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Yzc3ZjFiNGRiOTk4ZGViZThkODFhODczZjVmZTUzMiIsInN1YiI6IjY2NzMxZmQ3NDdmY2VlODA1NGVjNTEyYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DkFzPW3MkRrLPxS59ieo68IDizJGQf7PFJILduLwHlo',
             },
           }
         );
