@@ -1,35 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Suspense, lazy, useEffect } from 'react';
+import Navigation from './components/Navigation/Navigation';
+import './App.css';
+import { fetchTrendingMovies } from './api'; // Правильний імпорт з ./api
 
-function App() {
-  const [count, setCount] = useState(0)
+const HomePage = lazy(() => import('./pages/HomePage/HomePage'));
+const MoviesPage = lazy(() => import('./pages/MoviesPage/MoviesPage'));
+const MovieDetailsPage = lazy(() => import('./pages/MovieDetailsPage/MovieDetailsPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage/NotFoundPage'));
+
+const App = () => {
+
+  useEffect(() => {
+    const getTrendingMovies = async () => {
+      try {
+        const response = await fetchTrendingMovies();
+        console.log('Trending Movies:', response.data.results);
+      } catch (error) {
+        console.error('Error fetching trending movies:', error);
+      }
+    };
+
+    getTrendingMovies();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="App">
+        <Navigation />
+        <Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            <Route path="/" exact>
+              <HomePage />
+            </Route>
+            <Route path="/movies" exact>
+              <MoviesPage />
+            </Route>
+            <Route path="/movies/:movieId">
+              <MovieDetailsPage />
+            </Route>
+            <Route path="*">
+              <NotFoundPage />
+            </Route>
+          </Switch>
+        </Suspense>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </Router>
+  );
+};
 
-export default App
+export default App;
