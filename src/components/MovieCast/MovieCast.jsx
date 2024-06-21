@@ -1,28 +1,21 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import { fetchMovieCast } from '../../api';
 
 const MovieCast = ({ movieId }) => {
   const [cast, setCast] = useState([]);
 
   useEffect(() => {
-    const fetchMovieCast = async () => {
+    const getCast = async () => {
       try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}/credits`,
-          {
-            headers: {
-              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Yzc3ZjFiNGRiOTk4ZGViZThkODFhODczZjVmZTUzMiIsInN1YiI6IjY2NzMxZmQ3NDdmY2VlODA1NGVjNTEyYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DkFzPW3MkRrLPxS59ieo68IDizJGQf7PFJILduLwHlo',
-            },
-          }
-        );
-        setCast(response.data.cast);
+        const data = await fetchMovieCast(movieId);
+        setCast(data);
       } catch (error) {
         console.error('Помилка при отриманні акторського складу:', error);
       }
     };
 
-    fetchMovieCast();
+    getCast();
   }, [movieId]);
 
   return (
@@ -42,3 +35,4 @@ MovieCast.propTypes = {
 };
 
 export default MovieCast;
+

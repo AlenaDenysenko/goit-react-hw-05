@@ -1,28 +1,21 @@
-import { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import { fetchMovieReviews } from '../../api';
 
 const MovieReviews = ({ movieId }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    const fetchMovieReviews = async () => {
+    const getReviews = async () => {
       try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}/reviews`,
-          {
-            headers: {
-              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Yzc3ZjFiNGRiOTk4ZGViZThkODFhODczZjVmZTUzMiIsInN1YiI6IjY2NzMxZmQ3NDdmY2VlODA1NGVjNTEyYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DkFzPW3MkRrLPxS59ieo68IDizJGQf7PFJILduLwHlo',
-            },
-          }
-        );
-        setReviews(response.data.results);
+        const data = await fetchMovieReviews(movieId);
+        setReviews(data);
       } catch (error) {
         console.error('Помилка при отриманні рецензій:', error);
       }
     };
 
-    fetchMovieReviews();
+    getReviews();
   }, [movieId]);
 
   return (
@@ -42,5 +35,6 @@ MovieReviews.propTypes = {
 };
 
 export default MovieReviews;
+
 
 

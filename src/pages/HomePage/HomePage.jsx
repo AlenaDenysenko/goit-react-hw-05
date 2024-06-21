@@ -1,28 +1,21 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { fetchMovies } from '../../api';
 import MovieList from '../../components/MovieList/MovieList';
 
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
-    const fetchTrendingMovies = async () => {
+    const getMovies = async () => {
       try {
-        const response = await axios.get(
-          'https://api.themoviedb.org/3/trending/movie/day',
-          {
-            headers: {
-              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Yzc3ZjFiNGRiOTk4ZGViZThkODFhODczZjVmZTUzMiIsInN1YiI6IjY2NzMxZmQ3NDdmY2VlODA1NGVjNTEyYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DkFzPW3MkRrLPxS59ieo68IDizJGQf7PFJILduLwHlo',
-            },
-          }
-        );
-        setMovies(response.data.results);
+        const data = await fetchMovies('/movie/popular');
+        setMovies(data.results);
       } catch (error) {
-        console.error('Помилка при отриманні списку популярних фільмів:', error);
+        console.error('Помилка при отриманні фільмів:', error);
       }
     };
 
-    fetchTrendingMovies();
+    getMovies();
   }, []);
 
   return (
@@ -34,3 +27,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

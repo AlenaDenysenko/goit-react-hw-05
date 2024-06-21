@@ -1,7 +1,7 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
 import { useParams, Route, Routes, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import styles from './MovieDetailsPage.module.css';
+import { fetchMovieDetails } from '../../api';
 
 const MovieCast = lazy(() => import('../../components/MovieCast/MovieCast'));
 const MovieReviews = lazy(() => import('../../components/MovieReviews/MovieReviews'));
@@ -12,23 +12,16 @@ const MovieDetailsPage = () => {
   const [movie, setMovie] = useState(null);
 
   useEffect(() => {
-    const fetchMovieDetails = async () => {
+    const getMovieDetails = async () => {
       try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${movieId}`,
-          {
-            headers: {
-              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Yzc3ZjFiNGRiOTk4ZGViZThkODFhODczZjVmZTUzMiIsInN1YiI6IjY2NzMxZmQ3NDdmY2VlODA1NGVjNTEyYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DkFzPW3MkRrLPxS59ieo68IDizJGQf7PFJILduLwHlo',
-            },
-          }
-        );
-        setMovie(response.data);
+        const data = await fetchMovieDetails(movieId);
+        setMovie(data);
       } catch (error) {
         console.error('Помилка при отриманні деталей фільму:', error);
       }
     };
 
-    fetchMovieDetails();
+    getMovieDetails();
   }, [movieId]);
 
   const handleGoBack = () => {
@@ -79,4 +72,5 @@ const MovieDetailsPage = () => {
 };
 
 export default MovieDetailsPage;
+
 
