@@ -1,8 +1,17 @@
 .movieList {
-    list-style: none;
+    list-style-type: none;
     padding: 0;
 }
 
 .movieItem {
     margin-bottom: 10px;
+}
+
+.link {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.link:hover {
+    text-decoration: underline;
 }

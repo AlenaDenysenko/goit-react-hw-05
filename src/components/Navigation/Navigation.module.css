@@ -1,13 +1,18 @@
-.nav {
-    display: flex;
-    gap: 15px;
+.navList {
+    list-style-type: none;
+    padding: 0;
 }
 
-.link {
+.navList li {
+    display: inline;
+    margin-right: 10px;
+}
+
+.navList li a {
     text-decoration: none;
-    color: black;
+    color: #333;
 }
 
-.activeLink {
-    color: red;
+.navList li a.active {
+    font-weight: bold;
 }

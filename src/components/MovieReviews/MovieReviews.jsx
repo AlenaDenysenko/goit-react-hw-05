@@ -1,37 +1,52 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import axios from 'axios';
-import styles from './MovieReviews.module.css';
 
-const MovieReviews = () => {
-  const { movieId } = useParams();
+const MovieReviews = ({ movieId }) => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movieId}/reviews`,
-        {
-          headers: {
-            : 'Bearer YOUR_ACCESS_TOKEN',
-          },
-        }
-      );
-      setReviews(response.data.results);
+    const fetchMovieReviews = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${movieId}/reviews`,
+          {
+            headers: {
+              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Yzc3ZjFiNGRiOTk4ZGViZThkODFhODczZjVmZTUzMiIsInN1YiI6IjY2NzMxZmQ3NDdmY2VlODA1NGVjNTEyYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DkFzPW3MkRrLPxS59ieo68IDizJGQf7PFJILduLwHlo
+',
+            },
+          }
+        );
+        setReviews(response.data.results);
+      } catch (error) {
+        console.error('Помилка при отриманні оглядів:', error);
+      }
     };
-    fetchReviews();
+
+    fetchMovieReviews();
   }, [movieId]);
 
   return (
-    <ul className={styles.reviewsList}>
-      {reviews.map(review => (
-        <li key={review.id} className={styles.reviewItem}>
-          <h3>Author: {review.author}</h3>
-          <p>{review.content}</p>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h3>Рецензії</h3>
+      {reviews.length > 0 ? (
+        <ul>
+          {reviews.map((review) => (
+            <li key={review.id}>
+              <h4>{review.author}</h4>
+              <p>{review.content}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Немає доступних оглядів для цього фільму.</p>
+      )}
+    </div>
   );
+};
+
+MovieReviews.propTypes = {
+  movieId: PropTypes.string.isRequired,
 };
 
 export default MovieReviews;

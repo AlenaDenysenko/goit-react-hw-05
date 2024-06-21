@@ -1,47 +1,45 @@
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import styles from './MovieCast.module.css';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
-const MovieCast = () => {
-  const { movieId } = useParams();
+const MovieCast = ({ movieId }) => {
   const [cast, setCast] = useState([]);
 
   useEffect(() => {
-    const fetchCast = async () => {
+    const fetchMovieCast = async () => {
       try {
         const response = await axios.get(
           `https://api.themoviedb.org/3/movie/${movieId}/credits`,
           {
             headers: {
-              Authorization: `Bearer 7c77f1b4db998debe8d81a873f5fe532`,
+              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Yzc3ZjFiNGRiOTk4ZGViZThkODFhODczZjVmZTUzMiIsInN1YiI6IjY2NzMxZmQ3NDdmY2VlODA1NGVjNTEyYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DkFzPW3MkRrLPxS59ieo68IDizJGQf7PFJILduLwHlo
+',
             },
           }
         );
         setCast(response.data.cast);
       } catch (error) {
-        console.error('Error fetching cast:', error);
+        console.error('Помилка при отриманні акторського складу:', error);
       }
     };
-    
-    if (movieId) {
-      fetchCast();
-    }
+
+    fetchMovieCast();
   }, [movieId]);
 
   return (
-    <ul className={styles.castList}>
-      {cast.map(member => (
-        <li key={member.cast_id} className={styles.castItem}>
-          <img
-            src={`https://image.tmdb.org/t/p/w200/${member.profile_path}`}
-            alt={member.name}
-          />
-          <p>{member.name}</p>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <h3>Акторський склад</h3>
+      <ul>
+        {cast.map((actor) => (
+          <li key={actor.id}>{actor.name}</li>
+        ))}
+      </ul>
+    </div>
   );
+};
+
+MovieCast.propTypes = {
+  movieId: PropTypes.string.isRequired,
 };
 
 export default MovieCast;
