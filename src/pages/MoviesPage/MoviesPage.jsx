@@ -1,28 +1,33 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MovieList from '../../components/MovieList/MovieList';
+import { fetchMovies } from '../../api';
 
 const MoviesPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') || '';
 
-  const handleSearch = async (event) => {
-    event.preventDefault();
+  useEffect(() => {
+    const getMovies = async () => {
+      if (!query) return;
+      try {
+        const data = await fetchMovies(`/search/movie?query=${query}`, true);
+        setMovies(data.results);
+      } catch (error) {
+        console.error('Помилка при отриманні фільмів:', error);
+      }
+    };
 
-    if (!searchTerm) return;
+    getMovies();
+  }, [query]);
 
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&include_adult=false`,
-        {
-          headers: {
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3Yzc3ZjFiNGRiOTk4ZGViZThkODFhODczZjVmZTUzMiIsInN1YiI6IjY2NzMxZmQ3NDdmY2VlODA1NGVjNTEyYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.DkFzPW3MkRrLPxS59ieo68IDizJGQf7PFJILduLwHlo',
-          },
-        }
-      );
-      setSearchResults(response.data.results);
-    } catch (error) {
-      console.error('Помилка при пошуку фільмів:', error);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const newQuery = form.elements.query.value.trim();
+    if (newQuery) {
+      setSearchParams({ query: newQuery });
     }
   };
 
@@ -30,17 +35,13 @@ const MoviesPage = () => {
     <div>
       <h1>Пошук фільмів</h1>
       <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Введіть назву фільму"
-        />
+        <input type="text" name="query" defaultValue={query} />
         <button type="submit">Пошук</button>
       </form>
-      <MovieList movies={searchResults} />
+      <MovieList movies={movies} />
     </div>
   );
 };
 
 export default MoviesPage;
+

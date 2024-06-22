@@ -1,5 +1,5 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
-import { useParams, Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { useParams, Route, Routes, Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './MovieDetailsPage.module.css';
 import { fetchMovieDetails } from '../../api';
 
@@ -9,12 +9,14 @@ const MovieReviews = lazy(() => import('../../components/MovieReviews/MovieRevie
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [movie, setMovie] = useState(null);
+  const backLocation = location.state?.from || '/';
 
   useEffect(() => {
     const getMovieDetails = async () => {
       try {
-        const data = await fetchMovieDetails(movieId);
+        const data = await fetchMovieDetails(movieId, true);
         setMovie(data);
       } catch (error) {
         console.error('Помилка при отриманні деталей фільму:', error);
@@ -25,7 +27,7 @@ const MovieDetailsPage = () => {
   }, [movieId]);
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate(backLocation);
   };
 
   if (!movie) return <div>Loading...</div>;
@@ -50,20 +52,20 @@ const MovieDetailsPage = () => {
         <h3>Додаткова інформація</h3>
         <ul>
           <li>
-            <Link to={`/movies/${movieId}/cast`} className={styles.link}>
+            <Link to={`cast`} state={{ from: backLocation }} className={styles.link}>
               Акторський склад
             </Link>
           </li>
           <li>
-            <Link to={`/movies/${movieId}/reviews`} className={styles.link}>
+            <Link to={`reviews`} state={{ from: backLocation }} className={styles.link}>
               Рецензії
             </Link>
           </li>
         </ul>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route path="cast" element={<MovieCast movieId={movieId} />} />
-            <Route path="reviews" element={<MovieReviews movieId={movieId} />} />
+            <Route path="cast" element={<MovieCast />} />
+            <Route path="reviews" element={<MovieReviews />} />
           </Routes>
         </Suspense>
       </div>
@@ -72,5 +74,6 @@ const MovieDetailsPage = () => {
 };
 
 export default MovieDetailsPage;
+
 
 
